@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Input</title>
+</head>
+<body>
+    <h1>Speak into the microphone</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Start Recording</button>
+    </form>
+    <p>You said: {{ text }}</p>
+</body>
+</html>
