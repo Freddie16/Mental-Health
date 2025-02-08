@@ -60,6 +60,10 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,7 +84,7 @@ ROOT_URLCONF = 'mentalhealthchatbot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'mentalhealthchatbot', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
