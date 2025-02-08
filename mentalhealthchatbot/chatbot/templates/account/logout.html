@@ -1,0 +1,46 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}
+{% trans "Sign Out" %}  {# Changed title #}
+{% endblock head_title %}
+
+{% block content %}
+
+<div class="container mx-auto pt-16 px-4 md:px-6 lg:px-8">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 form-container">
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4.871 4.871a10 10 0 1014.258 14.258M7.757 7.757a7 7 0 109.9 9.9M14 10l-2 1m6.364 6.364l-2-1m-4.242-4.242L9 14" />
+                </svg>
+                <div
+                    class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-transparent bg-clip-text form-heading">
+                    MindChat</div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Ready to Leave?</h2>  {# Changed heading #}
+            <p class="text-gray-600">Are you sure you want to sign out?</p>  {# Changed message #}
+        </div>
+
+        <form method="post" action="{% url 'account_logout' %}">  {# Changed form action #}
+            {% csrf_token %}
+            <div class="space-y-4">
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 form-button">
+                    Sign Out  {# Changed button text #}
+                </button>
+            </div>
+        </form>
+
+        {# Removed "Don't have an account" section #}
+
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_body %}
+{{ block.super }}
+{% endblock %}

@@ -298,6 +298,12 @@
                 <button id="tts-btn">
                     <i class="fas fa-volume-up"></i> Text to Speech
                 </button>
+                <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" id="logout-btn" style="background: #d9534f; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
             </div>
             
             <div id="chat-box"></div>
