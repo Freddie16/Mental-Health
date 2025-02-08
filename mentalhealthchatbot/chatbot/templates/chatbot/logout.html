@@ -1,0 +1,41 @@
+<!-- logout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout | MindChat</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-purple-50 min-h-screen">
+    <div class="max-w-md mx-auto pt-16 px-4">
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.871 4.871a10 10 0 1014.258 14.258M7.757 7.757a7 7 0 109.9 9.9M14 10l-2 1m6.364 6.364l-2-1m-4.242-4.242L9 14"/>
+                </svg>
+                <div class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-transparent bg-clip-text">MindChat</div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Sign Out</h2>
+            <p class="text-gray-600">Are you sure you want to sign out?</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-xl p-8">
+            <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+                <div class="space-y-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300">
+                        Sign Out
+                    </button>
+                    <a href="/" class="block w-full text-center py-2 px-4 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition duration-300">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
