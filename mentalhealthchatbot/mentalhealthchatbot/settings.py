@@ -29,6 +29,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['mindchat.onrender.com', '127.0.0.1', 'localhost']
 
+CORS_ALLOWED_ORIGINS = [
+    "https://mindchat.onrender.com",
+    "http://localhost:3000",  # Add this if testing locally
+]
+
+
+CORS_ALLOW_CREDENTIALS = True
 # settings.py
 
 # Email Configuration
@@ -58,6 +65,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'crispy_forms',
+    'corsheaders',
+
 ]
 SITE_ID = 1
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -75,6 +84,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # Add this line
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Correct
+    'corsheaders.middleware.CorsMiddleware',
+
 
 ]
 
