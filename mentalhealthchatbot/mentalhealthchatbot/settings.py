@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5fm$*ss8(udrnd%5##fqg=uejb(uyjlg+cvl$a(p74p#e&r-0l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mindchat.onrender.com', '127.0.0.1', 'localhost']
 
 # settings.py
 
