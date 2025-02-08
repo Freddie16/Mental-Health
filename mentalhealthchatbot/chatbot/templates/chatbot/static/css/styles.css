@@ -1,0 +1,32 @@
+.login-form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.messages {
+    margin-bottom: 1rem;
+}
+
+.message {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
