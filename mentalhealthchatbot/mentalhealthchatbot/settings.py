@@ -66,10 +66,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'crispy_forms',
     'corsheaders',
+    'formtools',
 
 ]
 SITE_ID = 1
-ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+ACCOUNT_LOGIN_METHODS = ['email']  # Replace ACCOUNT_AUTHENTICATION_METHOD
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -95,7 +97,7 @@ ROOT_URLCONF = 'mentalhealthchatbot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'mentalhealthchatbot', 'templates')],
+        'DIRS': [BASE_DIR / "chatbot/templates"],  # Ensure correct path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,8 +158,11 @@ GEMINI_API_KEY ='AIzaSyDQFZ9jnSvQqzJ_WsZX4-XwcZxUI-y4iwg'  # Replace with your a
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -169,7 +174,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 LOGIN_URL = '/accounts/login/'  # Point to your login URL
-LOGIN_REDIRECT_URL = '/chat/'  # Replace 'chat' with the name of your chatbot URL
+LOGIN_REDIRECT_URL = '/questionnaire/'
 LOGOUT_REDIRECT_URL = 'home'  # Replace 'home' with your desired URL name
 
 AUTHENTICATION_BACKENDS = [

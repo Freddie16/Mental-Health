@@ -9,59 +9,58 @@
     <style>
         /* Custom Styles */
         .form-container {
-            background: linear-gradient(135deg, #f0f0f5, #ffffff); /* Subtle gradient background */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            background: linear-gradient(135deg, #f0f0f5, #ffffff);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .form-heading {
-            font-family: 'Poppins', sans-serif; /* Modern font */
+            font-family: 'Poppins', sans-serif;
             font-weight: 700;
         }
 
         .form-label {
-            font-family: 'Roboto', sans-serif; /* Clean font for labels */
-            color: #4b5563; /* Darker gray */
+            font-family: 'Roboto', sans-serif;
+            color: #4b5563;
         }
 
         .form-input {
-            border: 1px solid #e2e8f0; /* Light gray border */
-            padding: 1rem; /* Increased padding */
-            border-radius: 0.5rem; /* Slightly more rounded corners */
-            transition: border-color 0.3s ease; /* Smooth border transition */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .form-input:focus {
-            border-color: #6366f1; /* Purple focus border */
+            border-color: #6366f1;
             outline: none;
-            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.15); /* More prominent focus shadow */
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.15);
         }
 
         .form-button {
-            background: linear-gradient(to right, #6366f1, #818cf8); /* Gradient button */
-            padding: 1rem 1.5rem; /* Adjusted padding */
+            background: linear-gradient(to right, #6366f1, #818cf8);
+            padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: 600;
-            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Button hover effects */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Button shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-button:hover {
-            transform: translateY(-2px); /* Lift up slightly */
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
         }
 
         .form-link {
-            color: #6366f1; /* Purple link color */
+            color: #6366f1;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .form-link:hover {
-            color: #4f46e5; /* Darker purple on hover */
+            color: #4f46e5;
         }
 
-        /* Responsive adjustments */
         @media (max-width: 640px) {
             .max-w-md {
                 max-width: 90%;
@@ -107,8 +106,8 @@
                         <input type="password" name="password2" id="password2" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent form-input">
                     </div>
-                    <button type="submit"
-                        class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 form-button">
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 form-button">
                         Create Account
                     </button>
                 </div>

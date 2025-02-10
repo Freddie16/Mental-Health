@@ -1,4 +1,3 @@
-# chatbot/views.py
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import google.generativeai as genai
@@ -8,6 +7,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
+from .forms import QuestionnaireForm
+from formtools.wizard.views import SessionWizardView
+from .forms import Step1Form, Step2Form, Step3Form, Step4Form, Step5Form, Step6Form
+from .models import Questionnaire
+from django.utils.decorators import method_decorator
+import time
 
 
 
@@ -23,7 +28,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Redirect to home page after successful signup
+            return redirect('questionnaire')  # Redirect to questionnaire after signup
     else:
         form = UserCreationForm()
     return render(request, 'chatbot/signup.html', {'form': form})
@@ -59,7 +64,6 @@ def start_chat(request):
     """Redirect to chat interface after authentication"""
     return redirect('chat')
 
-
 def chat(request):
     if request.method == 'POST':
         user_input = request.POST.get('user_input', '')
@@ -84,3 +88,47 @@ def voice_input(request):
             except sr.UnknownValueError:
                 return JsonResponse({'error': 'Could not understand audio'})
     return render(request, 'chatbot/voice_input.html')
+
+FORMS = [
+    ("stress_level", Step1Form),
+    ("sleep_hours", Step2Form),
+    ("mood", Step3Form),
+    ("exercise_frequency", Step4Form),
+    ("social_support", Step5Form),
+    ("diet_quality", Step6Form),
+]
+
+TEMPLATES = {
+    "stress_level": "chatbot/questionnaire_step1.html",
+    "sleep_hours": "chatbot/questionnaire_step2.html",
+    "mood": "chatbot/questionnaire_step3.html",
+    "exercise_frequency": "chatbot/questionnaire_step4.html",
+    "social_support": "chatbot/questionnaire_step5.html",
+    "diet_quality": "chatbot/questionnaire_step6.html",
+}
+
+@method_decorator(login_required, name='dispatch')
+class QuestionnaireWizard(SessionWizardView):
+    def get_template_names(self):
+        return [TEMPLATES[self.steps.current]]
+
+    def done(self, form_list, **kwargs):
+        data = {}
+        for form in form_list:
+            data.update(form.cleaned_data)
+
+        # Save the questionnaire data
+        questionnaire = Questionnaire.objects.create(
+            user=self.request.user,
+            **data,
+            completed=True
+        )
+
+        # Render the loading screen
+        return render(self.request, 'chatbot/loading.html')
+
+# Add a view to handle the loading screen and redirect
+def loading(request):
+    # Simulate a delay (e.g., processing data)
+    time.sleep(3)  # Adjust the delay as needed
+    return redirect('chat')

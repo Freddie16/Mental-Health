@@ -1,0 +1,19 @@
+{% extends 'chatbot/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="loading-screen">
+    <div class="text-center">
+        <h1>Building your journey...</h1>
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+<script>
+    // Redirect to the chat page after 3 seconds
+    setTimeout(function() {
+        window.location.href = "{% url 'chat' %}";
+    }, 3000);
+</script>
+{% endblock %}
