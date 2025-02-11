@@ -124,7 +124,7 @@ class QuestionnaireWizard(SessionWizardView):
             return redirect('/chat/')  # Redirect to chat if already filled
 
         # Save questionnaire data
-        questionnaire = Questionnaire.objects.create(
+        Questionnaire.objects.create(
             user=user,
             stress_level=form_list[0].cleaned_data.get("stress_level"),
             sleep_hours=form_list[1].cleaned_data.get("sleep_hours"),
@@ -134,10 +134,11 @@ class QuestionnaireWizard(SessionWizardView):
             diet_quality=form_list[5].cleaned_data.get("diet_quality"),
         )
         
-        return redirect('/chat/')  # After questionnaire, redirect to chat
+        # Redirect to loading page before chat
+        return redirect('/loading/')  
+
 
 # Add a view to handle the loading screen and redirect
 def loading(request):
-    # Simulate a delay (e.g., processing data)
-    time.sleep(3)  # Adjust the delay as needed
-    return redirect('chat')
+    return render(request, 'chatbot/loading.html')
+
