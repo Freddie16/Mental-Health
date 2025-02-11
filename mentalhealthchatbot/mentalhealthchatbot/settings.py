@@ -174,8 +174,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 LOGIN_URL = '/accounts/login/'  # Point to your login URL
-LOGIN_REDIRECT_URL = '/questionnaire/'
-LOGOUT_REDIRECT_URL = 'home'  # Replace 'home' with your desired URL name
+# Change this line in settings.py
+LOGIN_REDIRECT_URL = 'home'  # Login goes to home
+LOGOUT_REDIRECT_URL = '/'  # Logout goes to home
+ACCOUNT_SIGNUP_REDIRECT_URL = '/questionnaire/'  # Ensure this path is correct
+  # Signup should go to the questionnaire
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

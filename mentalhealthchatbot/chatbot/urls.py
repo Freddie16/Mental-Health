@@ -22,7 +22,7 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('questionnaire/', QuestionnaireWizard.as_view(FORMS), name='questionnaire'),
+    path('questionnaire/', QuestionnaireWizard.as_view(), name='questionnaire'),
     path('loading/', loading, name='loading'),  # Add this line
 
 ]
