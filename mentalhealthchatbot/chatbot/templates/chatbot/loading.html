@@ -3,17 +3,130 @@
 
 {% block content %}
 <div class="loading-screen">
-    <div class="text-center">
-        <h1>Building your journey...</h1>
-        <div class="spinner-border text-light" role="status">
-            <span class="visually-hidden">Loading...</span>
+    <div class="loading-content">
+        <h1 class="loading-title">Building your journey<span class="dots">...</span></h1>
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
         </div>
+        <div class="loading-pulse"></div>
     </div>
 </div>
+
+<style>
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    position: relative;
+    padding: 2rem;
+}
+
+.loading-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s var(--animation-timing) forwards;
+}
+
+.dots {
+    display: inline-block;
+    animation: dots 1.5s infinite;
+}
+
+.loading-container {
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.6s var(--animation-timing) 0.3s forwards;
+}
+
+.loading-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: pulse 2s var(--animation-timing) infinite;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: ".";
+    }
+    40% {
+        content: "..";
+    }
+    60%, 100% {
+        content: "...";
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.95);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.95);
+        opacity: 0.5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-title,
+    .loading-container,
+    .loading-pulse {
+        animation: none;
+        opacity: 1;
+    }
+}
+</style>
+
 <script>
-    // Redirect to the chat page after 3 seconds
+    // Smooth transition before redirect
     setTimeout(function() {
-        window.location.href = "{% url 'chat' %}";
-    }, 3000);
+        document.querySelector('.loading-screen').style.opacity = '0';
+        document.querySelector('.loading-screen').style.transition = 'opacity 0.5s ease';
+        
+        setTimeout(function() {
+            window.location.href = "{% url 'chat' %}";
+        }, 500);
+    }, 2500);
 </script>
 {% endblock %}
