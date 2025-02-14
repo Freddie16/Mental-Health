@@ -13,6 +13,12 @@ from .models import Questionnaire
 from django.utils.decorators import method_decorator
 import time
 import speech_recognition as sr  # Added missing import
+import chatbot.models  # ✅ Correct way
+from .models import Profile
+from .models import ChatSession
+from django.db.models import Count
+
+
 
 # Configure Gemini
 genai.configure(api_key=settings.GEMINI_API_KEY)
@@ -141,4 +147,27 @@ class QuestionnaireWizard(SessionWizardView):
 # Add a view to handle the loading screen and redirect
 def loading(request):
     return render(request, 'chatbot/loading.html')
+from django.shortcuts import render
 
+def profile_view(request):
+    user = request.user
+
+    # Count the number of chat sessions per topic
+    chat_counts = ChatSession.objects.filter(user=user).values('topic').annotate(total=Count('topic'))
+
+    # Define progress as a percentage based on chat frequency
+    topic_progress = {chat['topic']: min(chat['total'] * 10, 100) for chat in chat_counts}
+
+    # Default values if no chats exist
+    context = {
+        'user': user,
+        'questionnaire_completed': True,  # Change based on user data
+        'chat_sessions': ChatSession.objects.filter(user=user).count(),
+
+        'anxiety_progress': topic_progress.get('anxiety', 0),
+        'depression_progress': topic_progress.get('depression', 0),
+        'alcoholism_progress': topic_progress.get('alcoholism', 0),
+        'stress_progress': topic_progress.get('stress', 0),
+    }
+
+    return render(request, 'chatbot/profile.html', context)

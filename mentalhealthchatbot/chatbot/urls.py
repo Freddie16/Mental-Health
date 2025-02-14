@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 from .views import home, start_chat, chat, signup, login_view, logout_view, QuestionnaireWizard, loading
 from .forms import Step1Form, Step2Form, Step3Form, Step4Form, Step5Form, Step6Form
+from .views import profile_view
+
+
 
 
 
@@ -24,5 +27,8 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('questionnaire/', QuestionnaireWizard.as_view(), name='questionnaire'),
     path('loading/', loading, name='loading'),  # Add this line
+    path('profile/', profile_view, name='profile'),
+
+
 
 ]

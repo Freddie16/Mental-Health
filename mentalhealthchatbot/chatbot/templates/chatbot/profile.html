@@ -1,0 +1,84 @@
+{% extends 'chatbot/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                    <h2 class="mb-0">{{ user.username }}'s Profile</h2>
+                    <img src="{% static 'images/default-user.png' %}" alt="Profile Icon" class="rounded-circle" width="60">
+                </div>
+                <div class="card-body">
+                    <h4 class="mb-3 text-primary">Mental Health Progress</h4>
+
+                    <div class="mb-3">
+                        <strong>Anxiety</strong>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-info text-dark fw-bold" role="progressbar" style="width: {{ anxiety_progress }}%;" 
+                                aria-valuenow="{{ anxiety_progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ anxiety_progress }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Depression</strong>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" style="width: {{ depression_progress }}%;" 
+                                aria-valuenow="{{ depression_progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ depression_progress }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Alcoholism</strong>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-danger text-white fw-bold" role="progressbar" style="width: {{ alcoholism_progress }}%;" 
+                                aria-valuenow="{{ alcoholism_progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ alcoholism_progress }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Stress</strong>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success text-white fw-bold" role="progressbar" style="width: {{ stress_progress }}%;" 
+                                aria-valuenow="{{ stress_progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ stress_progress }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4 text-secondary">Progress Details</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Questionnaire Status: 
+                            {% if questionnaire_completed %}
+                                <span class="badge bg-success">Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Chat Sessions:
+                            <span class="badge bg-primary">{{ chat_sessions }}</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{% url 'chat' %}" class="btn btn-primary w-100">Start New Chat</a>
+                        {% if not questionnaire_completed %}
+                            <a href="{% url 'questionnaire' %}" class="btn btn-secondary w-100">Complete Questionnaire</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

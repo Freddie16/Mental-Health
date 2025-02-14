@@ -97,7 +97,7 @@ ROOT_URLCONF = 'mentalhealthchatbot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "chatbot/templates"],  # Ensure correct path
+        'DIRS': [BASE_DIR / "chatbot/templates"],  # Add this
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
