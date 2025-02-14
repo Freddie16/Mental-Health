@@ -5,4 +5,4 @@ class ChatbotConfig(AppConfig):
     name = 'chatbot'
 
     def ready(self):
-        import chatbot.signals  # ✅ Ensure signals are imported
+        import chatbot.signals

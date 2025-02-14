@@ -6,7 +6,7 @@
     <title>My Companion</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
+         :root {
             --primary-color: #2A2A72;
             --secondary-color: #009FFD;
             --background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -334,7 +334,13 @@
                     <a href="{% url 'profile' %}" class="profile-link">
                         <div class="profile-pic">
                             {% with user_name=request.user.get_full_name|default:request.user.username %}
-                                {{ user_name|slice:":1"|add:user_name.split|last|slice:":1"|upper }}
+                                {% with parts=user_name.split %}
+                                    {% if parts|length >= 2 %}
+                                        {{ parts.0|slice:":1"|add:parts|last|slice:":1"|upper }}
+                                    {% else %}
+                                        {{ parts.0|slice:":1"|upper }}
+                                    {% endif %}
+                                {% endwith %}
                             {% endwith %}
                         </div>
                     </a>
@@ -352,7 +358,17 @@
             </div>
             <div class="profile-container">
                 <a href="{% url 'profile' %}" class="profile-link">
-                    <img src="{% static 'images/user-icon.png' %}" alt="Profile" class="profile-pic rounded-circle">
+                    <div class="profile-pic">
+                        {% with user_name=request.user.get_full_name|default:request.user.username %}
+                            {% with parts=user_name.split %}
+                                {% if parts|length >= 2 %}
+                                    {{ parts.0|slice:":1"|add:parts|last|slice:":1"|upper }}
+                                {% else %}
+                                    {{ parts.0|slice:":1"|upper }}
+                                {% endif %}
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
                 </a>
             </div>
             
@@ -369,7 +385,6 @@
                     <i class="fas fa-microphone"></i>
                 </button>
             </div>
-            
         </div>
     </div>
 
