@@ -14,6 +14,7 @@ class QuestionnaireAdmin(admin.ModelAdmin):
 
 @admin.register(ChatSession)
 class ChatSessionAdmin(admin.ModelAdmin):
-    list_display = ['user', 'created_at']
-    list_filter = ['created_at']
-    search_fields = ['user__username']
+    list_display = ['user', 'start_time', 'topic']  # Changed from 'created_at' to 'start_time'
+    list_filter = ['start_time', 'topic']  # Changed from 'created_at' to 'start_time'
+    search_fields = ['user__username', 'topic', 'messages']
+    readonly_fields = ['start_time', 'end_time']

@@ -160,6 +160,8 @@ GEMINI_API_KEY ='AIzaSyDQFZ9jnSvQqzJ_WsZX4-XwcZxUI-y4iwg'  # Replace with your a
 
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]

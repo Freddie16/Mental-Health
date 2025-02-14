@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
+from django.utils import timezone
 
 
 class Questionnaire(models.Model):
@@ -27,8 +28,18 @@ class Questionnaire(models.Model):
     completed = models.BooleanField(default=False)
 class ChatSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    topic = models.CharField(max_length=255)  # Track different mental health topics
+    topic = models.CharField(max_length=100, default='general')
+    start_time = models.DateTimeField(default=timezone.now)
+    end_time = models.DateTimeField(null=True, blank=True)
+    messages = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s chat on {self.start_time}"
+
+    class Meta:
+        ordering = ['-created_at']
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

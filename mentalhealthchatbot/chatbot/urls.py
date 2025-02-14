@@ -27,7 +27,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('questionnaire/', QuestionnaireWizard.as_view(), name='questionnaire'),
     path('loading/', loading, name='loading'),  # Add this line
-    path('profile/', profile_view, name='profile'),
+    path('profile/', views.profile_view, name='profile'),
     path('accounts/', include('allauth.urls')),  # Enables Google & Facebook authentication
 
 

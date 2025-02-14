@@ -17,7 +17,7 @@ import chatbot.models  # ✅ Correct way
 from .models import Profile
 from .models import ChatSession
 from django.db.models import Count
-
+from django.utils import timezone
 
 
 # Configure Gemini
@@ -72,6 +72,8 @@ def start_chat(request):
     """Redirect to chat interface after authentication"""
     return redirect('chat')
 
+
+@login_required
 def chat(request):
     if request.method == 'POST':
         user_input = request.POST.get('user_input', '')
@@ -79,6 +81,14 @@ def chat(request):
             # Generate a response using Gemini
             response = model.generate_content(user_input)
             ai_response = response.candidates[0].content.parts[0].text if response.candidates else "No response from AI"
+
+            # Create a new ChatSession record
+            ChatSession.objects.create(
+                user=request.user,
+                topic=request.POST.get('topic', 'general'),
+                messages=user_input + "\n" + ai_response
+            )
+
             return JsonResponse({'ai_response': ai_response})
         except Exception as e:
             return JsonResponse({'error': f"Gemini Error: {str(e)}"}, status=500)
@@ -158,10 +168,13 @@ def profile_view(request):
     # Define progress as a percentage based on chat frequency
     topic_progress = {chat['topic']: min(chat['total'] * 10, 100) for chat in chat_counts}
 
+    # Check if the user has completed the questionnaire
+    questionnaire_completed = Questionnaire.objects.filter(user=user).exists()
+
     # Default values if no chats exist
     context = {
         'user': user,
-        'questionnaire_completed': True,  # Change based on user data
+        'questionnaire_completed': questionnaire_completed,
         'chat_sessions': ChatSession.objects.filter(user=user).count(),
 
         'anxiety_progress': topic_progress.get('anxiety', 0),
