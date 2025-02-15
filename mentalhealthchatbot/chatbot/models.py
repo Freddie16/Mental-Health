@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from .sentiment import sia  # Import sia from sentiment.py
+
 # Initialize Sentiment Analyzer
 
 class ChatSession(models.Model):
@@ -20,44 +21,56 @@ class ChatSession(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-
+# Profile model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    questionnaire_completed = models.BooleanField(default=False)
-    chat_sessions = models.IntegerField(default=0)
-    progress_score = models.IntegerField(default=50)  # Start at neutral 50%
+    progress_score = models.FloatField(default=0.0)
 
     def update_progress(self):
-        print(f"Updating progress for {self.user.username}...")  # Debugging
-
-        # Get the last 5 chat sessions
-        chats = ChatSession.objects.filter(user=self.user).order_by('-created_at')[:5]
-
-        sentiment_scores = []
-        for chat in chats:
-            score = sia.polarity_scores(chat.messages)['compound']  # Get sentiment score (-1 to 1)
-            sentiment_scores.append(score)
-
-        if sentiment_scores:
-            avg_score = sum(sentiment_scores) / len(sentiment_scores)
-            self.progress_score = int((avg_score + 1) * 50)  # Convert to 0-100 scale
-        else:
-            self.progress_score = 50  # Default to neutral if no chats
-
-        print(f"New progress score for {self.user.username}: {self.progress_score}")  # Debugging
-        self.save(update_fields=['progress_score'])  # Ensure only progress is updated
+        """ Update progress without causing infinite recursion """
+        Profile.objects.filter(pk=self.pk).update(progress_score=self.progress_score)
 
     def save(self, *args, **kwargs):
-        self.update_progress()
-        super().save(*args, **kwargs)
+        """ Save method that avoids infinite recursion """
+        if not kwargs.get('update_fields'):  # Avoid recursion by skipping update call
+            super().save(*args, **kwargs)  # Save first to get a valid instance
+            self.update_progress()  # Now update progress directly in DB
+        else:
+            super().save(*args, **kwargs)
 
+    # Adding computed properties for admin display
+    def questionnaire_completed(self):
+        """ Returns whether the associated questionnaire is completed """
+        questionnaire = getattr(self, 'questionnaire', None)
+        return questionnaire.completed if questionnaire else False
+    questionnaire_completed.boolean = True  # This will display a checkbox in the admin
 
+    def chat_sessions(self):
+        """ Returns the number of chat sessions related to this profile """
+        return ChatSession.objects.filter(user=self.user).count()
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
+STRESS_LEVEL_CHOICES = [
+    ('Low', 'Low'),
+    ('Moderate', 'Moderate'),
+    ('High', 'High'),
+]
+# Questionnaire model
 class Questionnaire(models.Model):
+    EXERCISE_FREQUENCY_CHOICES = [
+        ('Never', 'Never'),
+        ('Rarely', 'Rarely'),
+        ('Occasionally', 'Occasionally'),
+        ('Regularly', 'Regularly'),
+        ('Daily', 'Daily'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    stress_level = models.IntegerField()
+    stress_level = models.CharField(max_length=8, choices=STRESS_LEVEL_CHOICES)  # Change max_length to 8
     sleep_hours = models.IntegerField()
     mood = models.CharField(max_length=50)
-    exercise_frequency = models.IntegerField()
+    exercise_frequency = models.CharField(max_length=20, choices=EXERCISE_FREQUENCY_CHOICES)
     social_support = models.CharField(max_length=100)
     diet_quality = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)
@@ -66,11 +79,12 @@ class Questionnaire(models.Model):
         return f"{self.user.username} - {self.mood}"
 
 
+# UserProfile model for tracking mental health progress
 class UserProfile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     mental_health_progress = models.FloatField(default=0.0)
 
-
+# ChatMessage model for storing individual messages
 class ChatMessage(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     message = models.TextField()

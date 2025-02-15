@@ -208,7 +208,7 @@ def profile_view(request):
     print(f"Stress Progress: {stress_progress}")
 
     # Check if the user has completed the questionnaire
-    questionnaire_completed = Questionnaire.objects.filter(user=user).exists()
+    questionnaire_completed = getattr(user.profile, "questionnaire_completed", False)
     print(f"Questionnaire Completed: {questionnaire_completed}")
 
     context = {

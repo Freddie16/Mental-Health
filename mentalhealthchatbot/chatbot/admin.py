@@ -3,8 +3,7 @@ from chatbot.models import Profile, Questionnaire, ChatSession
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'questionnaire_completed', 'chat_sessions', 'progress_score']
-    search_fields = ['user__username']
+    list_display = ('user', 'questionnaire_completed', 'chat_sessions')  # Ensure these exist in Profile
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(admin.ModelAdmin):
@@ -14,7 +13,7 @@ class QuestionnaireAdmin(admin.ModelAdmin):
 
 @admin.register(ChatSession)
 class ChatSessionAdmin(admin.ModelAdmin):
-    list_display = ['user', 'start_time', 'topic']  # Changed from 'created_at' to 'start_time'
-    list_filter = ['start_time', 'topic']  # Changed from 'created_at' to 'start_time'
+    list_display = ['user', 'start_time', 'topic']
+    list_filter = ['start_time', 'topic']
     search_fields = ['user__username', 'topic', 'messages']
     readonly_fields = ['start_time', 'end_time']
