@@ -18,9 +18,13 @@ from .models import Profile
 from .models import ChatSession
 from django.db.models import Count
 from django.utils import timezone
+import json
+from .utils import analyze_message
+from .models import UserProfile
+from django.views.decorators.csrf import csrf_exempt
+from .sentiment import sia  # Import sia from sentiment.py
 
-
-# Configure Gemini
+# Your existing views...# Configure Gemini
 genai.configure(api_key=settings.GEMINI_API_KEY)
 
 # Initialize the Gemini model
@@ -82,11 +86,15 @@ def chat(request):
             response = model.generate_content(user_input)
             ai_response = response.candidates[0].content.parts[0].text if response.candidates else "No response from AI"
 
+            # Calculate sentiment score for the user's input
+            sentiment_score = sia.polarity_scores(user_input)['compound']
+
             # Create a new ChatSession record
             ChatSession.objects.create(
                 user=request.user,
                 topic=request.POST.get('topic', 'general'),
-                messages=user_input + "\n" + ai_response
+                messages=user_input + "\n" + ai_response,
+                sentiment_score=sentiment_score  # Save the sentiment score
             )
 
             return JsonResponse({'ai_response': ai_response})
@@ -162,25 +170,81 @@ from django.shortcuts import render
 def profile_view(request):
     user = request.user
 
-    # Count the number of chat sessions per topic
-    chat_counts = ChatSession.objects.filter(user=user).values('topic').annotate(total=Count('topic'))
+    # Get all chat sessions for the user
+    chat_sessions = ChatSession.objects.filter(user=user)
 
-    # Define progress as a percentage based on chat frequency
-    topic_progress = {chat['topic']: min(chat['total'] * 10, 100) for chat in chat_counts}
+    # Calculate overall progress based on sentiment scores
+    if chat_sessions.exists():
+        total_sentiment = sum(chat.sentiment_score for chat in chat_sessions)
+        avg_sentiment = total_sentiment / len(chat_sessions)
+        overall_progress = int((avg_sentiment + 1) * 50)  # Convert to 0-100 scale
+    else:
+        overall_progress = 0  # Default progress if no chats
+
+    print(f"Total Sentiment Score: {total_sentiment if chat_sessions.exists() else 0}")
+    print(f"Average Sentiment Score: {avg_sentiment if chat_sessions.exists() else 0}")
+    print(f"Overall Progress: {overall_progress}")
+
+    # Calculate progress for each topic
+    def calculate_topic_progress(topic):
+        topic_chats = chat_sessions.filter(topic=topic)
+        if topic_chats.exists():
+            total_sentiment = sum(chat.sentiment_score for chat in topic_chats)
+            avg_sentiment = total_sentiment / len(topic_chats)
+            print(f"Total Sentiment for {topic}: {total_sentiment}")
+            print(f"Average Sentiment for {topic}: {avg_sentiment}")
+            return int((avg_sentiment + 1) * 50)  # Convert to 0-100 scale
+        print(f"No chats found for {topic}. Defaulting to 0 progress.")
+        return 0  # Default progress if no chats for the topic
+
+    anxiety_progress = calculate_topic_progress('anxiety')
+    depression_progress = calculate_topic_progress('depression')
+    alcoholism_progress = calculate_topic_progress('alcoholism')
+    stress_progress = calculate_topic_progress('stress')
+
+    print(f"Anxiety Progress: {anxiety_progress}")
+    print(f"Depression Progress: {depression_progress}")
+    print(f"Alcoholism Progress: {alcoholism_progress}")
+    print(f"Stress Progress: {stress_progress}")
 
     # Check if the user has completed the questionnaire
     questionnaire_completed = Questionnaire.objects.filter(user=user).exists()
+    print(f"Questionnaire Completed: {questionnaire_completed}")
 
-    # Default values if no chats exist
     context = {
         'user': user,
         'questionnaire_completed': questionnaire_completed,
-        'chat_sessions': ChatSession.objects.filter(user=user).count(),
-
-        'anxiety_progress': topic_progress.get('anxiety', 0),
-        'depression_progress': topic_progress.get('depression', 0),
-        'alcoholism_progress': topic_progress.get('alcoholism', 0),
-        'stress_progress': topic_progress.get('stress', 0),
+        'chat_sessions': chat_sessions.count(),
+        'anxiety_progress': anxiety_progress,
+        'depression_progress': depression_progress,
+        'alcoholism_progress': alcoholism_progress,
+        'stress_progress': stress_progress,
+        'overall_progress': overall_progress,
     }
-
     return render(request, 'chatbot/profile.html', context)
+
+
+@csrf_exempt
+@login_required
+def chat_message(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user = request.user
+        message_text = data.get("message")
+
+        if not message_text:
+            return JsonResponse({"error": "Message is required"}, status=400)
+
+        # Process Message
+        progress_increase = analyze_message(user, message_text)
+
+        # Fetch updated progress
+        user_profile = UserProfile.objects.get(user=user)
+
+        return JsonResponse({
+            "message": "Message processed successfully",
+            "progress_increase": progress_increase,
+            "new_progress": user_profile.mental_health_progress
+        })
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

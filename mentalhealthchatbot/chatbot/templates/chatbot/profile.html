@@ -14,9 +14,22 @@
                     <h4 class="mb-3 text-primary">Mental Health Progress</h4>
 
                     <div class="mb-3">
+                        <strong>Overall Progress</strong>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-primary fw-bold" role="progressbar"
+                                style="width: {{ overall_progress }}%;" 
+                                aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ overall_progress }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specific Mental Health Areas -->
+                    <div class="mb-3">
                         <strong>Anxiety</strong>
                         <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-info text-dark fw-bold" role="progressbar" style="width: {{ anxiety_progress }}%;" 
+                            <div class="progress-bar bg-info text-dark fw-bold" role="progressbar" 
+                                style="width: {{ anxiety_progress }}%;" 
                                 aria-valuenow="{{ anxiety_progress }}" aria-valuemin="0" aria-valuemax="100">
                                 {{ anxiety_progress }}%
                             </div>
@@ -26,7 +39,8 @@
                     <div class="mb-3">
                         <strong>Depression</strong>
                         <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" style="width: {{ depression_progress }}%;" 
+                            <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" 
+                                style="width: {{ depression_progress }}%;" 
                                 aria-valuenow="{{ depression_progress }}" aria-valuemin="0" aria-valuemax="100">
                                 {{ depression_progress }}%
                             </div>
@@ -36,7 +50,8 @@
                     <div class="mb-3">
                         <strong>Alcoholism</strong>
                         <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-danger text-white fw-bold" role="progressbar" style="width: {{ alcoholism_progress }}%;" 
+                            <div class="progress-bar bg-danger text-white fw-bold" role="progressbar" 
+                                style="width: {{ alcoholism_progress }}%;" 
                                 aria-valuenow="{{ alcoholism_progress }}" aria-valuemin="0" aria-valuemax="100">
                                 {{ alcoholism_progress }}%
                             </div>
@@ -46,7 +61,8 @@
                     <div class="mb-3">
                         <strong>Stress</strong>
                         <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-success text-white fw-bold" role="progressbar" style="width: {{ stress_progress }}%;" 
+                            <div class="progress-bar bg-success text-white fw-bold" role="progressbar" 
+                                style="width: {{ stress_progress }}%;" 
                                 aria-valuenow="{{ stress_progress }}" aria-valuemin="0" aria-valuemax="100">
                                 {{ stress_progress }}%
                             </div>

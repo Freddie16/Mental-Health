@@ -3,6 +3,7 @@ from . import views
 from .views import home, start_chat, chat, signup, login_view, logout_view, QuestionnaireWizard, loading
 from .forms import Step1Form, Step2Form, Step3Form, Step4Form, Step5Form, Step6Form
 from .views import profile_view
+from .views import chat_message
 
 
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path('loading/', loading, name='loading'),  # Add this line
     path('profile/', views.profile_view, name='profile'),
     path('accounts/', include('allauth.urls')),  # Enables Google & Facebook authentication
+    path('chat/', chat_message, name='chat_message'),
+
 
 
 

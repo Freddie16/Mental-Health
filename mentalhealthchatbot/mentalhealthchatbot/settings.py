@@ -67,6 +67,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'corsheaders',
     'formtools',
+    'rest_framework',  
+
 
 ]
 SITE_ID = 1
@@ -202,3 +204,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
     
 }
+
+import nltk
+nltk.download('vader_lexicon')
