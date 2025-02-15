@@ -27,10 +27,10 @@ SECRET_KEY = 'django-insecure-5fm$*ss8(udrnd%5##fqg=uejb(uyjlg+cvl$a(p74p#e&r-0l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mindchat.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['therapyai.onrender.com', '127.0.0.1', 'localhost']
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mindchat.onrender.com",
+    "https://therapyai.onrender.com",
     "http://localhost:3000",  # Add this if testing locally
 ]
 
