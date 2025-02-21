@@ -6,9 +6,6 @@ from .views import profile_view
 from .views import chat_message
 
 
-
-
-
 FORMS = [
     ("stress_level", Step1Form),
     ("sleep_hours", Step2Form),
@@ -22,18 +19,14 @@ FORMS = [
 urlpatterns = [
     path('', home, name='home'),
     path('start-chat/', start_chat, name='start-chat'),
-    path('chat/', chat, name='chat'),
+    path('chat/', views.chat, name='chat'), # Updated to use views.chat and named 'chat'
+    path('chat/<int:session_id>/', views.chat, name='chat_session'), # New path for specific session
     path('signup/', signup, name='signup'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('questionnaire/', QuestionnaireWizard.as_view(), name='questionnaire'),
+    path('questionnaire/', QuestionnaireWizard.as_view(FORMS), name='questionnaire'), # Pass FORMS here
     path('loading/', loading, name='loading'),  # Add this line
-    path('profile/', views.profile_view, name='profile'),
+    path('profile/', profile_view, name='profile'),
     path('accounts/', include('allauth.urls')),  # Enables Google & Facebook authentication
-    path('chat/', chat_message, name='chat_message'),
-
-
-
-
-
+    path('chat_message/', chat_message, name='chat_message'), # Corrected path name
 ]

@@ -6,10 +6,20 @@
     <title>My Companion</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-         :root {
+        /* CSS Reset and Root Variables */
+        :root {
             --primary-color: #2A2A72;
             --secondary-color: #009FFD;
-            --background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-color-primary: #333;
+            --text-color-white: #fff;
+            --bg-color-white: #fff;
+            --bg-color-sidebar: var(--primary-color);
+            --bg-color-chat-area: #f8f9fa;
+            --bg-color-input-area: var(--bg-color-white);
+            --box-shadow-light: 0 2px 5px rgba(0,0,0,0.05);
+            --box-shadow-medium: 0 3px 10px rgba(0,0,0,0.1);
+            --border-color-light: #eee;
         }
 
         * {
@@ -20,28 +30,37 @@
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: var(--background);
+            background: var(--background-gradient);
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Prevents scrollbars on the body */
+            color: var(--text-color-primary);
         }
 
+        /* Container and Layout */
         .container {
             width: 100vw;
             height: 100vh;
-            background: white;
             display: flex;
         }
 
         .sidebar {
             width: 300px;
-            background: var(--primary-color);
-            color: white;
+            background-color: var(--bg-color-sidebar);
+            color: var(--text-color-white);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            transition: width 0.3s ease;
+            transition: width 0.3s ease; /* Smooth sidebar width transition */
         }
 
+        .chat-area {
+            flex: 1; /* Chat area takes up remaining space */
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color-chat-area);
+        }
+
+        /* Sidebar Components */
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -55,27 +74,27 @@
         }
 
         #new-chat-btn {
-            background: var(--secondary-color);
-            color: white;
+            background-color: var(--secondary-color);
+            color: var(--text-color-white);
             border: none;
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth background and transform */
             width: 100%;
             margin-bottom: 20px;
         }
 
         #new-chat-btn:hover {
-            background: #0088dd;
-            transform: translateY(-2px);
+            background-color: #0088dd;
+            transform: translateY(-2px); /* Slight lift on hover */
         }
 
         .sidebar ul {
             list-style: none;
-            flex: 1;
-            overflow-y: auto;
+            flex: 1; /* Allows chat history to take up remaining sidebar space */
+            overflow-y: auto; /* Scroll for long chat history */
         }
 
         .sidebar ul li {
@@ -83,30 +102,24 @@
             cursor: pointer;
             border-radius: 8px;
             margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth background and transform */
         }
 
         .sidebar ul li:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
+            background-color: rgba(255, 255, 255, 0.2); /* Slightly more opaque on hover */
+            transform: translateX(5px); /* Slide effect on hover */
         }
 
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #f8f9fa;
-        }
-
+        /* Chat Area Components */
         .chat-header {
-            background: white;
+            background-color: var(--bg-color-white);
             color: var(--primary-color);
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--box-shadow-light);
         }
 
         .chat-header h1 {
@@ -114,147 +127,163 @@
             font-weight: 600;
         }
 
+        /* Profile Icon */
         .profile-container {
-            position: fixed;
+            position: fixed; /* Fixed position relative to viewport */
             left: 20px;
             bottom: 20px;
-            z-index: 1000;
+            z-index: 1000; /* Ensure profile is above other content */
         }
 
         .profile-link {
-            text-decoration: none;
-            color: inherit;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Inherit text color from parent */
         }
 
-        /* Update your existing .profile-pic CSS */
         .profile-pic {
             width: 50px;
             height: 50px;
             background-color: var(--secondary-color);
-            color: white;
-            border-radius: 50%;
+            color: var(--text-color-white);
+            border-radius: 50%; /* Circular profile picture */
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             font-weight: bold;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transform and background */
             text-decoration: none;
         }
 
         .profile-pic:hover {
-            transform: scale(1.1);
+            transform: scale(1.1); /* Scale up on hover */
             background-color: var(--primary-color);
         }
 
-        #tts-btn {
-            background: var(--primary-color);
+        /* TTS and Logout Buttons in Header */
+        #tts-btn, #logout-btn {
+            background-color: var(--primary-color);
             border: none;
-            color: white;
+            color: var(--text-color-white);
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease; /* Smooth background transition */
         }
 
-        #tts-btn:hover {
-            background: #232362;
+        #tts-btn:hover, #logout-btn:hover {
+            background-color: #232362;
         }
 
+        #logout-btn {
+            background-color: #d9534f; /* Distinct color for logout button */
+            margin-left: 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        /* Chat Box */
         #chat-box {
-            flex: 1;
-            overflow-y: auto;
+            flex: 1; /* Chat box takes up remaining chat area space */
+            overflow-y: auto; /* Scroll for long chats */
             padding: 30px;
+            display: flex;
+            flex-direction: column; /* Messages stack from top to bottom */
         }
 
         .message {
             margin-bottom: 20px;
-            display: flex;
-            animation: fadeIn 0.4s ease;
+            display: flex; /* Use flexbox for message alignment */
+            animation: fadeIn 0.4s ease; /* Fade-in animation for new messages */
         }
 
         .bubble {
-            max-width: 75%;
+            max-width: 75%; /* Prevent bubbles from stretching too wide */
             padding: 15px 25px;
             border-radius: 20px;
-            position: relative;
+            position: relative; /* For bubble arrow if needed */
             font-size: 16px;
             line-height: 1.5;
+            word-wrap: break-word; /* Handles long words without breaking layout */
         }
 
+        /* User and Bot Message Styles */
         .user-message {
-            justify-content: flex-end;
+            justify-content: flex-end; /* Align user messages to the right */
         }
 
         .user-bubble {
-            background: var(--secondary-color);
-            color: white;
-            border-radius: 20px 20px 5px 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color-white);
+            border-radius: 20px 20px 5px 20px; /* Custom bubble corners */
         }
 
         .bot-bubble {
-            background: white;
-            color: #333;
-            border-radius: 20px 20px 20px 5px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            background-color: var(--bg-color-white);
+            color: var(--text-color-primary);
+            border-radius: 20px 20px 20px 5px; /* Custom bubble corners */
+            box-shadow: var(--box-shadow-medium);
         }
 
+        /* Input Container */
         .input-container {
-        padding: 25px;
-        background: white;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-top: 1px solid #eee;
+            padding: 25px;
+            background-color: var(--bg-color-input-area);
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Spacing between input and buttons */
+            border-top: 1px solid var(--border-color-light);
         }
 
         .input-wrapper {
-        flex: 1;
-        position: relative;
+            flex: 1; /* Input wrapper takes up available space */
+            position: relative; /* For send button positioning */
         }
 
         #user-input {
-        width: 100%;
-        padding: 15px 65px 15px 20px; /* Increase right padding for button */
-        border: 2px solid #eee;
-        border-radius: 30px;
-        font-size: 16px;
-        outline: none;
-        transition: all 0.3s ease;
+            width: 100%;
+            padding: 15px 65px 15px 20px; /* Right padding for send button */
+            border: 2px solid var(--border-color-light);
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth border and shadow */
         }
 
         #user-input:focus {
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 15px rgba(0,159,253,0.15);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(0,159,253,0.15);
         }
 
+        /* Send Button */
         #send-btn {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--secondary-color);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%); /* Vertically center button */
+            background-color: var(--secondary-color);
+            color: var(--text-color-white);
+            border: none;
+            padding: 12px;
+            border-radius: 50%; /* Circular button */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth background transition */
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #send-btn i {
-        font-size: 18px;
+            font-size: 18px;
         }
+
         #send-btn:hover {
-        background: #040c11;
+            background-color: #040c11;
         }
 
-
+        /* Voice Button */
         #voice-btn {
             width: 50px;
             height: 50px;
@@ -262,8 +291,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--secondary-color);
-            transition: all 0.3s ease;
+            background-color: var(--secondary-color);
+            transition: transform 0.3s ease; /* Smooth transform */
         }
 
         #voice-btn:hover {
@@ -271,46 +300,29 @@
         }
 
         .recording {
-            animation: pulse 1.5s infinite;
-            background: #ff4444 !important;
+            animation: pulse 1.5s infinite; /* Pulse animation when recording */
+            background-color: #ff4444 !important; /* Override hover color when recording */
         }
 
-        .topic-selector {
-        margin: 0 10px;
-        position: relative;
-    }
+        /* Voice Selector */
+        #voice-selector {
+            padding: 8px 15px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 20px;
+            background-color: var(--bg-color-white);
+            color: var(--primary-color);
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease; /* Smooth border transition */
+        }
 
-    .topic-selector select {
-        padding: 8px 15px;
-        border: 2px solid var(--secondary-color);
-        border-radius: 20px;
-        background: white;
-        color: var(--primary-color);
-        font-size: 14px;
-        cursor: pointer;
-        outline: none;
-        transition: all 0.3s ease;
-    }
+        #voice-selector:hover {
+            border-color: var(--primary-color);
+        }
 
-    .topic-selector select:hover {
-        border-color: var(--primary-color);
-    }
 
-    .topic-badge {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 12px;
-        margin-left: 10px;
-        color: white;
-    }
-
-    .topic-anxiety { background-color: #4a90e2; }
-    .topic-depression { background-color: #f39c12; }
-    .topic-alcoholism { background-color: #e74c3c; }
-    .topic-stress { background-color: #2ecc71; }
-    .topic-general { background-color: #95a5a6; }
-
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -322,31 +334,62 @@
             100% { transform: scale(1); }
         }
 
+        /* Scrollbar Styling */
         ::-webkit-scrollbar {
             width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background-color: #f1f1f1;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
+            background-color: var(--secondary-color);
             border-radius: 4px;
         }
 
+        /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
+            .container {
+                flex-direction: column; /* Stack sidebar and chat area vertically on smaller screens */
+            }
+
             .sidebar {
-                width: 0;
-                padding: 0;
-                position: absolute;
-                height: 100%;
-                z-index: 100;
+                width: 100%; /* Full width sidebar on small screens */
+                max-height: none; /* Remove max-height restriction */
+                padding: 10px;
+                position: static; /* Sidebar is part of the normal flow */
+                overflow-y: auto; /* Enable scroll if chat history is long */
+                z-index: auto; /* Reset z-index */
+                margin-bottom: 20px; /* Add space below sidebar */
+            }
+
+            .chat-area {
+                width: 100%; /* Full width chat area on small screens */
             }
 
             .sidebar.active {
-                width: 300px;
-                padding: 20px;
+                width: 300px; /* Active class might not be needed anymore, consider removing if not used */
+                padding: 20px; /* Adjust padding if needed for active state */
+            }
+
+            .chat-header h1 {
+                font-size: 24px; /* Smaller header font on small screens */
+            }
+
+            .profile-container {
+                position: static; /* Profile container in normal flow on small screens */
+                margin-top: 10px; /* Add some top margin */
+                margin-left: 0;
+                text-align: center; /* Center profile icon on small screens */
+            }
+
+            .input-container {
+                padding: 15px; /* Adjust input container padding on small screens */
+            }
+
+            .bubble {
+                max-width: 90%; /* Bubbles can take more width on smaller screens */
             }
         }
     </style>
@@ -381,35 +424,21 @@
                         </div>
                     </a>
                 </div>
-                
+
                 <button id="tts-btn">
                     <i class="fas fa-volume-up"></i> Text to Speech
                 </button>
                 <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" id="logout-btn" style="background: #d9534f; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+                    <button type="submit" id="logout-btn">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
             </div>
-            <div class="profile-container">
-                <a href="{% url 'profile' %}" class="profile-link">
-                    <div class="profile-pic">
-                        {% with user_name=request.user.get_full_name|default:request.user.username %}
-                            {% with parts=user_name.split %}
-                                {% if parts|length >= 2 %}
-                                    {{ parts.0|slice:":1"|add:parts|last|slice:":1"|upper }}
-                                {% else %}
-                                    {{ parts.0|slice:":1"|upper }}
-                                {% endif %}
-                            {% endwith %}
-                        {% endwith %}
-                    </div>
-                </a>
-            </div>
-            
+
+
             <div id="chat-box"></div>
-            
+
             <div class="input-container">
                 <div class="input-wrapper">
                     <input type="text" id="user-input" placeholder="Share your thoughts...">
@@ -417,6 +446,10 @@
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
+                <select id="voice-selector">
+                    <option value="0">Microsoft David Desktop - English (United States)</option>
+                    <option value="1">Microsoft Zira Desktop - English (United States)</option>
+                </select>
                 <button id="voice-btn">
                     <i class="fas fa-microphone"></i>
                 </button>
@@ -435,15 +468,84 @@
 
             let ttsEnabled = true;
             let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            let voices = [];
+            let voicesLoaded = false;
 
-            updateChatHistory();
+            // Function to load available voices
+            function loadVoices() {
+                console.log("loadVoices() called");
+                voices = synth.getVoices();
+                console.log("Available voices:", voices);
+                const voiceSelect = $('#voice-selector');
+                voiceSelect.empty();
+                voices.forEach((voice, index) => {
+                    voiceSelect.append(`<option value="${index}">${voice.name} (${voice.lang})</option>`);
+                });
+                voicesLoaded = true; // Moved to after the loop
+                console.log("voicesLoaded set to true");
+            }
 
+            // Initialize voices when they are loaded
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+
+             // Attempt to load voices immediately on script load
+            loadVoices();
+
+            // Updated speak function
+            function speak(text) {
+                if (!voicesLoaded) {
+                    console.log("Voices not yet loaded, cannot speak.");
+                    return;
+                }
+                if (voices.length > 0) {
+                    console.log("Voices array length:", voices.length);
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    const selectedVoiceIndex = $('#voice-selector').val();
+                    utterance.voice = voices[selectedVoiceIndex];
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.2;
+                    synth.speak(utterance);
+                } else {
+                    console.log("No voices available to speak even after loading.");
+                }
+            }
+
+            // Updated new chat button handler
+            $('#new-chat-btn').on('click', function() {
+                // Get current chat messages
+                const currentMessages = Array.from($('#chat-box').children()).map(msg => ({
+                    text: $(msg).find('.bubble').text(),
+                    type: $(msg).hasClass('user-message') ? 'user' : 'bot'
+                }));
+
+                if (currentMessages.length > 0) {
+                    // Add to chat history with timestamp
+                    chatHistory.unshift({
+                        id: Date.now(),
+                        messages: currentMessages,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    // Update local storage
+                    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+                    updateChatHistory();
+                }
+
+                // Clear current chat
+                $('#chat-box').empty();
+
+                // Reset input field
+                $('#user-input').val('');
+            });
+
+            // Enable/disable TTS
             $('#tts-btn').on('click', function() {
                 ttsEnabled = !ttsEnabled;
                 $(this).toggleClass('active', ttsEnabled);
                 $(this).html(`<i class="fas fa-volume-${ttsEnabled ? 'up' : 'off'}"></i> Text to Speech`);
             });
 
+            // Voice input handling
             $('#voice-btn').on('click', function() {
                 if (!recognition.recording) {
                     recognition.start();
@@ -467,11 +569,13 @@
                 $('#voice-btn').removeClass('recording');
             };
 
+            // Send message on button click
             $('#send-btn').on('click', function() {
                 const input = $('#user-input').val().trim();
                 if (input) processInput(input);
             });
 
+            // Send message on Enter key press
             $('#user-input').on('keypress', function(e) {
                 if (e.which === 13) {
                     const input = $(this).val().trim();
@@ -479,28 +583,11 @@
                 }
             });
 
-            $('#new-chat-btn').on('click', function() {
-                const currentChat = {
-                    id: Date.now(),
-                    messages: Array.from($('#chat-box').children()).map(msg => ({
-                        text: $(msg).find('.bubble').text(),
-                        type: $(msg).hasClass('user-message') ? 'user' : 'bot'
-                    }))
-                };
-                
-                if (currentChat.messages.length > 0) {
-                    chatHistory.unshift(currentChat);
-                    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-                    updateChatHistory();
-                }
-                
-                $('#chat-box').empty();
-            });
-
+            // Process user input
             function processInput(text) {
                 addMessage(text, 'user');
                 $('#user-input').val('');
-                
+
                 $.ajax({
                     url: "{% url 'chat' %}",
                     method: "POST",
@@ -512,6 +599,7 @@
                         const formattedResponse = formatResponse(response.ai_response);
                         addMessage(formattedResponse, 'bot');
                         if (ttsEnabled) {
+                            console.log("AI Response for TTS:", response.ai_response);
                             speak(cleanTextForTTS(response.ai_response));
                         }
                     },
@@ -522,6 +610,7 @@
                 });
             }
 
+            // Add message to chat box
             function addMessage(text, type) {
                 const messageDiv = $('<div>').addClass(`message ${type}-message`);
                 const bubble = $('<div>').addClass(`bubble ${type}-bubble`).html(text);
@@ -530,27 +619,23 @@
                 $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
             }
 
-            function speak(text) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
-                synth.speak(utterance);
-            }
-
+            // Format response text
             function formatResponse(text) {
                 return text.replace(/\*\*(.*?)\*\*/g, '<li>$1</li>').replace(/\*/g, '');
             }
 
+            // Clean text for TTS
             function cleanTextForTTS(text) {
                 return text.replace(/[*,]/g, '');
             }
 
+            // Update chat history
             function updateChatHistory() {
                 $('#chat-history').empty();
                 chatHistory.forEach((chat, index) => {
                     const firstMessage = chat.messages[0]?.text || 'New Chat';
                     const timestamp = new Date(chat.id).toLocaleString();
-                    
+
                     $('#chat-history').append(`
                         <li onclick="loadChat(${index})">
                             <div style="font-size: 0.8em; color: rgba(255,255,255,0.7);">${timestamp}</div>
@@ -560,12 +645,16 @@
                 });
             }
 
+            // Load chat from history
             window.loadChat = function(index) {
                 $('#chat-box').empty();
                 chatHistory[index].messages.forEach(msg => {
                     addMessage(msg.text, msg.type);
                 });
             };
+
+            // Initial chat history load (if any)
+            updateChatHistory();
         });
     </script>
 </body>

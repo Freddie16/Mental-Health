@@ -1,12 +1,11 @@
+# chatbot/signals.py
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import Profile, UserProfile  
-from django.contrib.auth import get_user_model
+from .models import UserProfile, Profile # added Profile import
 
-User = get_user_model()  
-@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-        UserProfile.objects.create(user=instance)  # Create UserProfile too
+        UserProfile.objects.create(user=instance, questionnaire_completed=False)  # Set questionnaire_completed to False
+        Profile.objects.create(user=instance) # Create Profile too, removed progress_score
+
+post_save.connect(create_user_profile, sender=User)

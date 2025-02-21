@@ -1,104 +1,291 @@
 {% extends 'chatbot/base.html' %}
-
 {% load static %}
 
 {% block content %}
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <div class="card shadow-lg">
-                <div class="card-header bg-light">
-                    <h2 class="mb-0">{{ user.username }}'s Profile</h2>
+            <div class="card profile-card shadow-lg">
+                <div class="card-header profile-header bg-primary text-white">
+                    <h2 class="profile-title mb-0">Profile</h2>
+                    <h4 class="profile-username mb-0">{{ user.username }}</h4>
+                    {% if latest_session %}
+                    <a href="{% url 'chat_session' session_id=latest_session.id %}" class="btn btn-back-to-chat" title="Back to Chat">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    {% endif %}
                 </div>
+
                 <div class="card-body">
-                    <h4 class="mb-3 text-primary">Mental Health Progress</h4>
+                    <section class="progress-report">
+                        <h4 class="progress-heading text-primary mb-3">Mental Wellness Journey</h4>
+                        <div class="overall-progress-section progress-item">
+                            <h5 class="progress-label">Overall Progress</h5>
+                            <div class="progress">
+                                <div class="progress-bar overall-bar bg-success" role="progressbar" style="width: {{ progress_data.overall_sentiment }}%;" aria-valuenow="{{ progress_data.overall_sentiment }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ progress_data.overall_sentiment }}%
+                                </div>
+                            </div>
+                            <p class="progress-details">Total Sessions: {{ progress_data.total_sessions }}</p>
+                        </div>
 
-                    <div class="mb-3">
-                        <strong>Overall Progress</strong>
-                        <div class="progress" style="height: 25px;">
-                            <div class="progress-bar bg-primary fw-bold" role="progressbar"
-                                style="width: {{ overall_progress }}%;" 
-                                aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ overall_progress }}%
+                        {% for topic, topic_data in progress_data.topics.items %}
+                        <div class="topic-progress-section progress-item">
+                            <h5 class="progress-label">{{ topic|title }} Focus</h5>
+                            <div class="progress">
+                                <div class="progress-bar topic-bar bg-info" role="progressbar" style="width: {{ topic_data.progress }}%;" aria-valuenow="{{ topic_data.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ topic_data.progress }}%
+                                </div>
+                            </div>
+                            <p class="progress-details">{{ topic|title }} Sessions: {{ topic_data.count }}</p>
+
+                            <div class="keyword-progress-list mt-3">
+                                {% for keyword, keyword_data in topic_data.keywords.items %}
+                                <div class="keyword-progress-item">
+                                    <h6 class="keyword-label">{{ keyword|title }}</h6>
+                                    <div class="progress keyword-progress">
+                                        <div class="progress-bar keyword-bar bg-secondary" role="progressbar" style="width: {{ keyword_data.progress }}%;" aria-valuenow="{{ keyword_data.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                            {{ keyword_data.progress }}%
+                                        </div>
+                                    </div>
+                                    <p class="progress-details">Sessions with keyword: {{ keyword_data.count }}</p>
+                                </div>
+                                {% endfor %}
                             </div>
                         </div>
-                    </div>
+                        {% endfor %}
+                    </section>
 
-                    <!-- Specific Mental Health Areas -->
-                    <div class="mb-3">
-                        <strong>Anxiety</strong>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-info text-dark fw-bold" role="progressbar" 
-                                style="width: {{ anxiety_progress }}%;" 
-                                aria-valuenow="{{ anxiety_progress }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ anxiety_progress }}%
-                            </div>
-                        </div>
-                    </div>
+                    <section class="details-section mt-3">
+                        <h4 class="details-heading text-secondary">Quick Stats</h4>
+                        <ul class="list-group details-list">
+                            <li class="list-group-item detail-item d-flex justify-content-between align-items-center">
+                                Questionnaire Status:
+                                {% if questionnaire_completed %}
+                                <span class="badge bg-success badge-pill">Completed</span>
+                                {% else %}
+                                <span class="badge bg-warning badge-pill">Pending</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item detail-item d-flex justify-content-between align-items-center">
+                                Chat Interactions:
+                                <span class="badge bg-primary badge-pill">{{ progress_data.total_sessions }} Sessions</span>
+                            </li>
+                        </ul>
+                    </section>
 
-                    <div class="mb-3">
-                        <strong>Depression</strong>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" 
-                                style="width: {{ depression_progress }}%;" 
-                                aria-valuenow="{{ depression_progress }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ depression_progress }}%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Alcoholism</strong>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-danger text-white fw-bold" role="progressbar" 
-                                style="width: {{ alcoholism_progress }}%;" 
-                                aria-valuenow="{{ alcoholism_progress }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ alcoholism_progress }}%
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Stress</strong>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-success text-white fw-bold" role="progressbar" 
-                                style="width: {{ stress_progress }}%;" 
-                                aria-valuenow="{{ stress_progress }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ stress_progress }}%
-                            </div>
-                        </div>
-                    </div>
-
-                    <h4 class="mt-4 text-secondary">Progress Details</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Questionnaire Status: 
-                            {% if questionnaire_completed %}
-                                <span class="badge bg-success">Completed</span>
-                            {% else %}
-                                <span class="badge bg-warning">Pending</span>
-                            {% endif %}
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Total Chat Sessions:
-                            <span class="badge bg-primary">{{ chat_sessions }}</span>
-                        </li>
-                    </ul>
-
-                    <div class="mt-4 d-flex gap-2">
-                        <a href="{% url 'chat' %}" class="btn btn-primary w-100">Start New Chat</a>
+                    <section class="actions-section mt-4 d-flex flex-column gap-2">
+                        <a href="{% url 'chat' %}" class="btn btn-primary action-button">Start New Chat Session</a>
                         {% if not questionnaire_completed %}
-                            <a href="{% url 'questionnaire' %}" class="btn btn-secondary w-100">Complete Questionnaire</a>
+                        <a href="{% url 'questionnaire' %}" class="btn btn-info action-button">Complete Health Questionnaire</a>
                         {% endif %}
-                    </div>
+                        <a href="{% url 'home' %}" class="btn btn-secondary action-button">Return to Home</a>
+                    </section>
 
-                    <!-- Add "Back to Home" Button -->
-                    <div class="mt-3">
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary w-100">Back to Home</a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Profile Card Styles */
+    .profile-card {
+        border-radius: 20px;
+        overflow: hidden; /* Ensure header corners are rounded */
+        border: none; /* Remove default border */
+    }
+
+    .profile-header {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        padding: 1.5rem 2rem;
+        position: relative;
+        background: linear-gradient(135deg, #007bff, #56b3ff); /* Gradient background */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    .profile-title {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.1rem;
+    }
+    .profile-username {
+        color: #eee; /* Slightly lighter text for username */
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    /* Back to Chat Button - Circular and Top Right */
+    .btn-back-to-chat {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(255, 255, 255, 0.25); /* Lighter background for button */
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease, transform 0.2s ease-in-out; /* Added transform for animation */
+    }
+
+    .btn-back-to-chat:hover {
+        background-color: rgba(255, 255, 255, 0.5); /* Darken on hover */
+        transform: scale(1.1); /* Slight scale up on hover */
+    }
+
+    .btn-back-to-chat i {
+        font-size: 1.4em;
+    }
+
+    /* --- Progress Section Styles --- */
+    .progress-report {
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+
+    .progress-item {
+        background-color: #fff; /* White progress item background */
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 18px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Softer shadow */
+        border: 1px solid #f0f0f0; /* Light border */
+    }
+
+    .progress-label {
+        font-weight: 600; /* Slightly bolder label */
+        margin-bottom: 0.7rem;
+        color: #3a3a3a; /* Darker text for labels */
+        display: block; /* Ensure it takes full width */
+    }
+
+    .progress {
+        background-color: #f0f0f0; /* Lighter progress bar background */
+        border-radius: 1rem;
+        overflow: hidden;
+        height: 1.1rem; /* Slightly taller progress bar */
+    }
+
+    .progress-bar {
+        color: white;
+        text-align: right; /* Align text to the right */
+        padding-right: 10px; /* Add padding to text inside */
+        font-size: 0.85rem;
+        border-radius: 1rem;
+        line-height: 1.1rem; /* Vertically center text */
+    }
+    .progress-bar.overall-bar {
+        background-color: #28a745; /* Green for overall progress */
+    }
+    .progress-bar.topic-bar {
+        background-color: #17a2b8; /* Info color for topic progress */
+    }
+    .progress-bar.keyword-bar {
+        background-color: #6c757d; /* Secondary color for keyword progress */
+    }
+
+    .progress-details {
+        margin-top: 0.6rem;
+        font-size: 0.9rem;
+        color: #6a6a6a; /* Medium gray for details */
+    }
+
+    /* Keyword Progress Styles */
+    .keyword-progress-list {
+        margin-top: 1rem;
+        padding-left: 1rem; /* Indent keyword progress list */
+    }
+    .keyword-progress-item {
+        margin-bottom: 0.8rem;
+    }
+    .keyword-label {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.4rem;
+        display: block; /* Full width label */
+    }
+    .progress.keyword-progress {
+        height: 0.8rem; /* Slightly shorter keyword progress bars */
+        border-radius: 0.8rem;
+    }
+    .progress-bar.keyword-bar {
+        font-size: 0.75rem;
+        line-height: 0.8rem; /* Vertically center text in keyword progress bar */
+        border-radius: 0.8rem;
+    }
+
+
+    /* Details Section Styles */
+    .details-section {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Added margin below */
+    }
+
+    .details-heading {
+        margin-bottom: 1.2rem;
+        color: #555;
+        font-weight: bold; /* Make details heading bolder */
+    }
+
+    .details-list .list-group-item {
+        border-color: #f0f0f0;
+        padding: 1rem 1.2rem;
+        border-radius: 0.75rem;
+        margin-bottom: 0.5rem; /* Spacing between list items */
+        background-color: #fefefe; /* Very light background */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Very subtle shadow */
+    }
+
+    .badge-pill {
+        border-radius: 1.2rem;
+        font-size: 0.8rem;
+        padding: 0.6em 0.8em;
+        font-weight: 500; /* Slightly bolder badge text */
+    }
+
+    /* Actions Section Styles */
+    .actions-section {
+        margin-top: 25px;
+        margin-bottom: 15px; /* Added margin below actions */
+    }
+
+    .action-button {
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        font-size: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Shadow for buttons */
+    }
+    .action-button.btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+     .action-button.btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
+    }
+
+    .action-button.btn-secondary {
+        color: #555; /* Darker text for secondary button */
+        background-color: #f8f9fa; /* Lighter background for secondary button */
+        border-color: #ddd; /* Light border for secondary button */
+    }
+    .action-button.btn-secondary:hover, .action-button.btn-info:hover, .action-button.btn-primary:hover {
+         box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+         transform: translateY(-2px); /* Slight lift on hover */
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 {% endblock %}

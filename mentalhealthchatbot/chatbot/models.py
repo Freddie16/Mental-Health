@@ -24,19 +24,10 @@ class ChatSession(models.Model):
 # Profile model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    progress_score = models.FloatField(default=0.0)
 
-    def update_progress(self):
-        """ Update progress without causing infinite recursion """
-        Profile.objects.filter(pk=self.pk).update(progress_score=self.progress_score)
+    # Removed progress_score as it's redundant with UserProfile.mental_health_progress
 
-    def save(self, *args, **kwargs):
-        """ Save method that avoids infinite recursion """
-        if not kwargs.get('update_fields'):  # Avoid recursion by skipping update call
-            super().save(*args, **kwargs)  # Save first to get a valid instance
-            self.update_progress()  # Now update progress directly in DB
-        else:
-            super().save(*args, **kwargs)
+    # Removed custom save and update_progress methods as progress is now tracked in UserProfile
 
     # Adding computed properties for admin display
     def questionnaire_completed(self):
@@ -51,6 +42,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile of {self.user.username}"
+
 STRESS_LEVEL_CHOICES = [
     ('Low', 'Low'),
     ('Moderate', 'Moderate'),
@@ -83,6 +75,7 @@ class Questionnaire(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     mental_health_progress = models.FloatField(default=0.0)
+    questionnaire_completed = models.BooleanField(default=False) # Added questionnaire_completed field
 
 # ChatMessage model for storing individual messages
 class ChatMessage(models.Model):
