@@ -98,7 +98,7 @@
     }
 
     .profile-header {
-        border-top-left-radius: 20px;
+        tborder-top-left-radius: 20px;
         border-top-right-radius: 20px;
         padding: 1.5rem 2rem;
         position: relative;
@@ -118,30 +118,30 @@
         margin-bottom: 0;
     }
 
-    /* Back to Chat Button - Circular and Top Right */
+    /* Back to Chat Button - Stylish Arrow Top Right */
     .btn-back-to-chat {
         position: absolute;
         top: 20px;
         right: 20px;
-        background-color: rgba(255, 255, 255, 0.25); /* Lighter background for button */
+        background: none; /* No background */
         color: white;
         border: none;
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
+        width: auto; /* Adjust to icon size */
+        height: auto; /* Adjust to icon size */
+        border-radius: 0; /* No border radius */
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: background-color 0.3s ease, transform 0.2s ease-in-out; /* Added transform for animation */
+        transition: transform 0.2s ease-in-out; /* Smooth transform */
     }
 
     .btn-back-to-chat:hover {
-        background-color: rgba(255, 255, 255, 0.5); /* Darken on hover */
-        transform: scale(1.1); /* Slight scale up on hover */
+        background-color: transparent; /* No background on hover */
+        transform: scale(1.2); /* Slight scale up on hover */
     }
 
     .btn-back-to-chat i {
-        font-size: 1.4em;
+        font-size: 1.8em; /* Larger arrow for emphasis */
     }
 
     /* --- Progress Section Styles --- */
