@@ -156,7 +156,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-GEMINI_API_KEY ='AIzaSyD455bo3ehBcYPrjImdWajaZ-ypXs-kRTQ'  
+GEMINI_API_KEY ='AIzaSyDQFZ9jnSvQqzJ_WsZX4-XwcZxUI-y4iwg'  
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 

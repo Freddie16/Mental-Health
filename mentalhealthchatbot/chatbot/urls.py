@@ -29,4 +29,5 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),
     path('accounts/', include('allauth.urls')),  # Enables Google & Facebook authentication
     path('chat_message/', chat_message, name='chat_message'), # Corrected path name
+    path('list-models/', views.list_available_models, name='list_models'), # Add this line
 ]

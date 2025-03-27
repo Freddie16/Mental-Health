@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 import speech_recognition as sr
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 from .forms import (
     QuestionnaireForm,
@@ -21,11 +22,12 @@ from .utils import analyze_message
 from .sentiment import sia
 
 
+
+
+
 # Configure Gemini API
 genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
-
-
+model = genai.GenerativeModel('models/gemma-3-27b-it')
 # -------------- Authentication Views -------------- #
 def signup(request):
     """Handles user signup."""
@@ -294,3 +296,15 @@ def chat_message(request):
         })
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+def list_available_models(request):
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+    output = ""
+    for m in genai.list_models():
+        output += f"<h3>{m.name}: {m.description}</h3>"
+        output += "<ul>"
+        for method in m.supported_generation_methods:
+            output += f"<li>{method}</li>"
+        output += "</ul>"
+    return HttpResponse(output)
+
